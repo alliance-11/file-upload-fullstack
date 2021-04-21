@@ -24,10 +24,10 @@
 
 
 #frmSignup #avatar {
-
+  visibility: hidden;
 }
 
-#frmSignup #avatar_preview img {
+#frmSignup label img {
   width: 150px;
 }
 
