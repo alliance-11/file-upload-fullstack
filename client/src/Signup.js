@@ -36,9 +36,7 @@ const Signup = () => {
         <div>
           <input {...register('password', { required: 'Required!!'})} placeholder="Password..." type="password" />
         </div>
-        <div>
-          <input id="avatar"  type="file" onChange={onAvatarChange} />
-        </div>
+        {/* FILE UPLOAD INPUT GOES HERE */}
         <button type="submit">Signup</button>
       </form>
     </div>
