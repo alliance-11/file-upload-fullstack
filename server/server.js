@@ -1,8 +1,6 @@
 require("dotenv").config() // load stuff from .env into process.env
 
 const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors")
 
@@ -25,13 +23,9 @@ mongoose.connect(strConn, {
 .catch((err) => console.log("[ERROR] Connection to database failed!", err.message))
 
 
-app.use(cors({
-  origin: process.env.FRONTEND_ORIGIN || 'http://localhost:3000',
-  credentials: true
-}))
+app.use(cors({ origin: process.env.FRONTEND_ORIGIN || 'http://localhost:3000' }))
 app.use(logger('dev'));
 app.use(express.json());
-app.use(cookieParser());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
