@@ -9,17 +9,8 @@ router.get('/', async (req, res, next) => {
   res.json(users);
 });
 
-// MIDDLEWARE - what do they do?
 
-// express.json() => parses incoming JSON data into req.body
-// cookieParser() => parses incoming cookies into req.cookies
-// multer() => parses incoming FILE data into req.file (or req.files for multiple files)
-
-
-
-// POST /users => signup a user
-  // upload.single("avatar") => will look for a file inside the sent data entry "avatar"
-  // upload.array("avatar") => will look for an array of files inside key "avatar"
+// POST /users => signup a user with or without an avatar!
 router.post('/', async (req, res, next) => {
 
   console.log(req.body)
@@ -29,26 +20,26 @@ router.post('/', async (req, res, next) => {
   }
 
   // extract file base64 string from body...
+  // why? we do not wanna store encoded file in database
+  // => we wanna store the URL to it so we can easily deliver and render in frontend later...
   const { avatar, ...userData } = req.body
 
   console.log( userData )
   console.log( avatar && avatar.substring(0, 20) )
 
-  // create new user in DB
-  let userNew
-  
   // UPLOAD / forward the received file to cloudinary
     // dataUri => dataUri://image/png:base64:YHATWWKRzczzhnrnszaja
   if(avatar) {
     let uploadResult = await cloudinary.uploader.upload( avatar )
-    const fileURLOnCloudinary = uploadResult.secure_url
-    userNew = await User.create({...userData, avatar_url:  fileURLOnCloudinary })
+    const fileUrl = uploadResult.secure_url
+    userData.avatar_url = fileUrl
   }
-  else {
-    userNew = await User.create(userData)
-  }
+
+  const userNew = await User.create( userData )
 
   res.json(userNew)
 })
+
+// => please test me now in Insomnia :)
 
 module.exports = router;
