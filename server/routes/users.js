@@ -13,8 +13,6 @@ router.get('/', async (req, res, next) => {
 // POST /users => signup a user with or without an avatar!
 router.post('/', async (req, res, next) => {
 
-  console.log(req.body)
-
   if(!req.body.nick) {
     return next("No 'nick' given, buddy. Don't always rush things. THINK before you act!")
   }
@@ -24,20 +22,30 @@ router.post('/', async (req, res, next) => {
   // => we wanna store the URL to it so we can easily deliver and render in frontend later...
   const { avatar, ...userData } = req.body
 
-  console.log( userData )
-  console.log( avatar && avatar.substring(0, 20) )
+  console.log( "JSON Data:", userData )
+  avatar && console.log( "Avatar String: ", avatar.substring(0, 20) )
 
   // UPLOAD / forward the received file to cloudinary
     // dataUri => dataUri://image/png:base64:YHATWWKRzczzhnrnszaja
   if(avatar) {
-    let uploadResult = await cloudinary.uploader.upload( avatar )
-    const fileUrl = uploadResult.secure_url
-    userData.avatar_url = fileUrl
+    try {
+      let uploadResult = await cloudinary.uploader.upload( avatar )
+      const fileUrl = uploadResult.secure_url
+      userData.avatar_url = fileUrl
+    }
+    catch(err) {
+      return next(err.error)
+    }
+  }
+  
+  try {
+    const userNew = await User.create( userData )
+    res.json(userNew)
+  }
+  catch(err) {
+    next( err )
   }
 
-  const userNew = await User.create( userData )
-
-  res.json(userNew)
 })
 
 // => please test me now in Insomnia :)

@@ -4,9 +4,12 @@ import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import avatarDefault from './avatar_default.svg' // default avatar image
 
+axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL
+
 const Signup = () => {
 
-  const [avatarPreview, setAvatarPreview] = useState( avatarDefault )
+  const [avatarPreview, setAvatarPreview] = useState( )
+  const [error, setError] = useState()
 
   const { register, handleSubmit, formState: { errors } } = useForm()
   const history = useHistory()
@@ -32,17 +35,18 @@ const Signup = () => {
     // merge avatar file with data
     jsonData.avatar = avatarPreview
 
-    console.log(jsonData)
+    console.log("User to send: ", jsonData)
 
     // signup user in backend
     try {
-      let response = await axios.post('http://localhost:5000/users', jsonData)
-      console.log("Response: ", response.data) // => signed up user
+      let response = await axios.post('/users', jsonData)
+      console.log("User API: ", response.data) // => signed up user
       history.push('/users')  
     }
     // handle error
     catch(errAxios) {
-      console.log(errAxios.response && errAxios.response.data)
+      console.log( errAxios.response?.data.error )
+      setError( errAxios.response?.data.error )
     }
   };
 
@@ -51,24 +55,28 @@ const Signup = () => {
       <h1>Signup</h1>
       <form onSubmit={handleSubmit( onSubmit )} autoComplete="off" >
         {/* AVATAR PREVIEW */}
-        <div>
+        <div className="avatar-container">
           <label htmlFor="avatar">
-            <img src={ avatarPreview } />
+            <img className="avatar-preview" src={ avatarPreview || avatarDefault } />
           </label>
         </div>
-        <div>
+        <div className="input">
           <input {...register('nick', { required: 'Required' })} placeholder="Nickname..." />
         </div>
-        <div>
+        <div className="input">
           <input {...register('email', { required: 'Required' })} placeholder="Email..." type="email" />
         </div>
-        <div>
+        <div className="input">
           <input {...register('password', { required: 'Required!!'})} placeholder="Password..." type="password" />
         </div>
         <div>
-          <input accept="image/*" type="file" id="avatar" name="avatar" onChange={onAvatarChange} /> 
+          <input accept="image/*" type="file" 
+            id="avatar" 
+            name="avatar" 
+            onChange={ onAvatarChange } /> 
         </div>
         <button type="submit">Signup</button>
+        { error && <div className="error">{ error }</div> }
       </form>
     </div>
   );

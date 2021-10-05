@@ -2,10 +2,9 @@
 
 In this live coding example we gonna show:
 
-- How to handle file uploads in Express with the package multer
-- How to encode binary data into a base64 encoded string
-- How to upload received files to a cloud provider
-- How to upload mixed content (JSON data + file) from a React frontend using FormData
 - How to show an image preview before upload
+- How to encode binary data into a base64 encoded string
+- How to handle file uploads to a FileProvider with the package Cloudinary
+- How to store resulting URL in user database
 
 Let the upload games begin...

@@ -31,6 +31,13 @@
   width: 150px;
 }
 
+#frmSignup button {
+  min-width: 100px;
+  padding: 5px;
+  text-transform: uppercase;
+  border-radius: 10px;
+}
+
 .user-card {
   border: 2px solid #ccc;
   border-radius: 10px;
@@ -51,4 +58,22 @@
 .user-card span {
   flex-grow: 1;
   text-transform: uppercase;
+}
+
+.error {
+  font-weight: bold;
+  color: red;
+}
+
+.avatar-preview {
+  cursor: pointer;
+  /* border-radius: 50%; */
+}
+
+.input {
+  padding: 5px;
+}
+.input input {
+  border-radius: 15px;
+  padding: 10px;
 }
