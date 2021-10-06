@@ -24,7 +24,7 @@ const Signup = () => {
     fileReader.readAsDataURL( fileSelected ) // concert to base64 encoded string
     // wait until file is fully loaded / converted to base64
     fileReader.onloadend = (ev) => {
-      console.log( fileReader.result )
+      console.log("Base64 encoded file: ", fileReader.result.substring(0, 40) )
       // load base64 into preview img tag
       setAvatarPreview( fileReader.result )
     }
