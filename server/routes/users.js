@@ -17,13 +17,8 @@ router.post('/', async (req, res, next) => {
 
   console.log( "JSON Data:", userData )
 
-  if(!req.body.nick) {
-    return next("No 'nick' given, buddy. Don't always rush things. THINK before you act!")
-  }
-
-  let userNew
-
   // create USER in DB first (with temporary base64 avatar in database!)
+  let userNew
   try {
     userNew = await User.create( { ...userData, avatar_url: avatar } )
     res.json( userNew )

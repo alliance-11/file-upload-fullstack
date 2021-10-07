@@ -10,6 +10,7 @@ const Signup = () => {
 
   const [avatarPreview, setAvatarPreview] = useState( )
   const [error, setError] = useState()
+  const [loading, setLoading] = useState(false)
 
   const { register, handleSubmit, formState: { errors } } = useForm()
   const history = useHistory()
@@ -32,6 +33,8 @@ const Signup = () => {
 
   const onSubmit = async (jsonData) => {
 
+    setLoading(true)
+
     // merge avatar file with data
     jsonData.avatar = avatarPreview
 
@@ -40,13 +43,15 @@ const Signup = () => {
     // signup user in backend
     try {
       let response = await axios.post('/users', jsonData)
+      setLoading(false)
       console.log("User API: ", response.data) // => signed up user
-      history.push('/users')  
+      history.push('/users')
     }
     // handle error
     catch(errAxios) {
       console.log( errAxios.response?.data.error )
       setError( errAxios.response?.data.error )
+      setLoading(false)
     }
   };
 
@@ -61,13 +66,16 @@ const Signup = () => {
           </label>
         </div>
         <div className="input">
-          <input {...register('nick', { required: 'Required' })} placeholder="Nickname..." />
+          <input {...register('nick', { required: 'Nick required' })} placeholder="Nickname..." />
+          { errors.nick && <div className="error">{errors.nick.message}</div> }
         </div>
         <div className="input">
-          <input {...register('email', { required: 'Required' })} placeholder="Email..." type="email" />
+          <input {...register('email', { required: 'Email required' })} placeholder="Email..." type="email" />
+          { errors.email && <div className="error">{errors.email.message}</div> }
         </div>
         <div className="input">
-          <input {...register('password', { required: 'Required!!'})} placeholder="Password..." type="password" />
+          <input {...register('password', { required: 'PW required!!'})} placeholder="Password..." type="password" />
+          { errors.password && <div className="error">{errors.password.message}</div> }
         </div>
         <div>
           <input accept="image/*" type="file" 
@@ -75,7 +83,10 @@ const Signup = () => {
             name="avatar" 
             onChange={ onAvatarChange } /> 
         </div>
-        <button type="submit">Signup</button>
+        { loading ? 
+          <div className="loading"></div> :
+          <button type="submit">Signup</button>
+        }
         { error && <div className="error">{ error }</div> }
       </form>
     </div>
