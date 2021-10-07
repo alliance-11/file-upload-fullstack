@@ -10,6 +10,7 @@ const UserSchema = new Schema({
 // SCHEMA Options
 {
   versionKey: false,
+  timestamps: true,
   toJSON: {
     // keep password field out of all API responses (=> on all res.send() calls)
     transform: (doc, returnDoc) => {
